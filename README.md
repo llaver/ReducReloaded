@@ -5,6 +5,6 @@ action filled, bug ridden, class action disaster waiting to happen.
 
 Get ready for Reduc:RELOADED!
 
-Shoutout to.. her...
+Shoutout to Randall
 
 "private int W00T!"
