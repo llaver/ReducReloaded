@@ -32,3 +32,12 @@ and actually willing to commit too. It's a way to motivate ourselves to actually
 Feel free to submit a pull request or contact me to be added as a contributor. 
 
 Finally, messing with and/or continuing someones code is totally acceptable (try to be creative.. don't just delete code)
+
+
+
+
+
+
+
+
+...The worst android app ever can't be the worst if it doesn't have a link to a website that doesn't work.
