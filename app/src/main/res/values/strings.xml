@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ReducReloaded</string>
+    <string name="play_game">Play Game</string>
+    <string name="options">Options</string>
+    <string name="reduc">REDUC</string>
+    <string name="reloaded">RELOADED</string>
+    <string name="or_some_shit">Or some shit</string>
 </resources>
