@@ -23,12 +23,15 @@ public class MainMenu extends Activity {
 		final Button button = (Button) findViewById(R.id.button);
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				startService(playGameIntent);
+				System.out.println("Pressed Play");
+				startActivity(playGameIntent);
+				System.out.println("Did it do it?");
 			}
 		});
 		final Button button2 = (Button) findViewById(R.id.button2);
-		button.setOnClickListener(new View.OnClickListener() {
+		button2.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				System.out.println("Pressed Options");
 				startActivity(settingsIntent);
 			}
 		});
