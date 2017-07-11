@@ -1,4 +1,4 @@
-package com.game.alpha.reduc;
+package com.game.alpha.reduc.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

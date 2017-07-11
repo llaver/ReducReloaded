@@ -1,7 +1,8 @@
-package com.game.alpha.reduc;
+package com.game.alpha.reduc.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import com.game.alpha.reduc.R;
 
 public class PlayGameActivity extends Activity {
 	

@@ -1,4 +1,4 @@
-package com.game.alpha.reduc;
+package com.game.alpha.reduc.activities;
 
 
 import android.annotation.TargetApi;
@@ -19,6 +19,7 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import com.game.alpha.reduc.R;
 
 import java.util.List;
 
