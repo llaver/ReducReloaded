@@ -40,7 +40,7 @@ public class GameCanvasView extends View {
 		mPaint.setColor(Color.BLACK);
 		mPaint.setStyle(Paint.Style.STROKE);
 		mPaint.setStrokeJoin(Paint.Join.ROUND);
-		mPaint.setStrokeWidth(4f);
+		mPaint.setStrokeWidth(8f);
 	}
 	
 	// override onSizeChanged
@@ -51,6 +51,7 @@ public class GameCanvasView extends View {
 		// your Canvas will draw onto the defined Bitmap
 		mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 		mCanvas = new Canvas(mBitmap);
+		
 	}
 	
 	// override onDraw
