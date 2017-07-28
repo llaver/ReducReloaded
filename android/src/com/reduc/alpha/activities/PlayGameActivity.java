@@ -3,6 +3,7 @@ package com.reduc.alpha.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import com.reduc.alpha.R;
 import com.reduc.alpha.views.GameCanvasView;
 
 public class PlayGameActivity extends Activity {
