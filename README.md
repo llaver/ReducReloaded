@@ -9,7 +9,7 @@ Shoutout to Randall
 
 "private int W00T!"
 
-
+The main code for the game is in core dir.
 
 # Purpose of this project
 For a long time some friends and I have been trying to plan and create an Android app among
