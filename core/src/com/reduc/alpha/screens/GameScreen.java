@@ -25,6 +25,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.World;
 import com.reduc.alpha.ReducReloaded;
 import com.reduc.alpha.systems.*;
 
@@ -47,7 +48,7 @@ public class GameScreen extends ScreenAdapter {
 	int lastScore;
 	String scoreString;
 	
-	PooledEngine engine;
+	public static PooledEngine engine;
 	private GlyphLayout layout = new GlyphLayout();
 	
 	private int state;
