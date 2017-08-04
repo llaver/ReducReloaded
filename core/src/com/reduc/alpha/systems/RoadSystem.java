@@ -5,14 +5,13 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.reduc.alpha.ReducReloaded;
 import com.reduc.alpha.components.RoadComponent;
-import com.reduc.alpha.screens.GameScreen;
 
 /**
  * Created by rbell on 8/1/2017.
  */
 public class RoadSystem extends IteratingSystem {
 	
-	PooledEngine engine = GameScreen.engine;
+	//PooledEngine engine = GameScreen.engine;
 	
 	Family roadFamily;
 	ImmutableArray<Entity> roads;
@@ -23,7 +22,7 @@ public class RoadSystem extends IteratingSystem {
 		
 		rm = ComponentMapper.getFor(RoadComponent.class);
 		roadFamily = Family.all(RoadComponent.class).get();
-		roads = engine.getEntitiesFor(roadFamily);
+		//roads = engine.getEntitiesFor(roadFamily);
 	}
 	
 	
