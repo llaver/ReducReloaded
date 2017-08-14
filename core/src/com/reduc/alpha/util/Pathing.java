@@ -59,6 +59,12 @@ public class Pathing {
 		//roadMap.drawMap(path);
 		
 		//TODO Convert to good format for the game
+		//Get Screen Width
+		//Scale Path Width to Screen Width
+		//Scale Y somehow?
+		//????????????
+		//Profit
+		//TODO figure out ??????????
 		
 		return path;
 	}

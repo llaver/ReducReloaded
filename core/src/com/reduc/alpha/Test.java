@@ -49,6 +49,7 @@ public class Test {
 						//g.fillRect(i, k, i,k);
 						//g.fillRect(i * 10, k * 10, (i + 1) * 10, (k + 1) * 10);
 						System.out.print("X");
+						//System.out.println("X: " + i + " Y: " + k);
 					} else {
 						//g.setColor(Color.black);
 						//g.fillRect(i, k, i, k);
