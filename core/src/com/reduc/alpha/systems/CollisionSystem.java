@@ -68,27 +68,27 @@
 //	public void addedToEngine(Engine engine) {
 //		this.engine = engine;
 //
-//		bobs = engine.getEntitiesFor(Family.all(BobComponent.class, BoundsComponent.class, TransformComponent.class, StateComponent.class).get());
-//		coins = engine.getEntitiesFor(Family.all(CoinComponent.class, BoundsComponent.class).get());
-//		squirrels = engine.getEntitiesFor(Family.all(SquirrelComponent.class, BoundsComponent.class).get());
-//		springs = engine.getEntitiesFor(Family.all(SpringComponent.class, BoundsComponent.class, TransformComponent.class).get());
-//		castles = engine.getEntitiesFor(Family.all(CastleComponent.class, BoundsComponent.class).get());
-//		platforms = engine.getEntitiesFor(Family.all(PlatformComponent.class, BoundsComponent.class, TransformComponent.class).get());
+////		bobs = engine.getEntitiesFor(Family.all(BobComponent.class, BoundsComponent.class, TransformComponent.class, StateComponent.class).get());
+////		coins = engine.getEntitiesFor(Family.all(CoinComponent.class, BoundsComponent.class).get());
+////		squirrels = engine.getEntitiesFor(Family.all(SquirrelComponent.class, BoundsComponent.class).get());
+////		springs = engine.getEntitiesFor(Family.all(SpringComponent.class, BoundsComponent.class, TransformComponent.class).get());
+////		castles = engine.getEntitiesFor(Family.all(CastleComponent.class, BoundsComponent.class).get());
+////		platforms = engine.getEntitiesFor(Family.all(PlatformComponent.class, BoundsComponent.class, TransformComponent.class).get());
 //	}
 //
 //	@Override
 //	public void update(float deltaTime) {
-//		BobSystem bobSystem = engine.getSystem(BobSystem.class);
-//		PlatformSystem platformSystem = engine.getSystem(PlatformSystem.class);
+////		BobSystem bobSystem = engine.getSystem(BobSystem.class);
+////		PlatformSystem platformSystem = engine.getSystem(PlatformSystem.class);
 //
 //		for (int i = 0; i < bobs.size(); ++i) {
 //			Entity bob = bobs.get(i);
 //
 //			StateComponent bobState = sm.get(bob);
 //
-//			if (bobState.get() == BobComponent.STATE_HIT) {
-//				continue;
-//			}
+////			if (bobState.get() == BobComponent.STATE_HIT) {
+////				continue;
+////			}
 //
 //			MovementComponent bobMov = mm.get(bob);
 //			BoundsComponent bobBounds = bm.get(bob);
@@ -105,10 +105,10 @@
 //						BoundsComponent platBounds = bm.get(platform);
 //
 //						if (bobBounds.bounds.overlaps(platBounds.bounds)) {
-//							bobSystem.hitPlatform(bob);
-//							listener.jump();
-//							if (rand.nextFloat() > 0.5f) {
-//								platformSystem.pulverize(platform);
+////							bobSystem.hitPlatform(bob);
+////							listener.jump();
+////							if (rand.nextFloat() > 0.5f) {
+////								platformSystem.pulverize(platform);
 //							}
 //
 //							break;

@@ -30,11 +30,11 @@ public class Settings {
 			
 			String s = filehandle.readString();
 			
-			String[] strings = s.split("\n");
+			//String[] strings = s.split("\n");
 			
-			soundEnabled = Boolean.parseBoolean(strings[0]);
+			//soundEnabled = Boolean.parseBoolean(strings[0]);
 			for (int i = 0; i < 5; i++) {
-				highscores[i] = Integer.parseInt(strings[i+1]);
+				//highscores[i] = Integer.parseInt(strings[i+1]);
 			}
 		} catch (Throwable e) {
 			// :( It's ok we have defaults
