@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.reduc.alpha.screens.MainMenuScreen;
 import com.reduc.alpha.screens.TestScreen;
 
 public class ReducReloaded extends Game {
@@ -17,7 +18,7 @@ public class ReducReloaded extends Game {
 		img = new Texture("badlogic.jpg");
 		//Settings.load();
 		//Assets.load();
-		this.setScreen(new TestScreen(this));
+		this.setScreen(new MainMenuScreen(this));
 	}
 
 	@Override

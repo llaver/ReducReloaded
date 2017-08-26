@@ -20,7 +20,7 @@ public class Test {
 		Pathing pathing = new Pathing();
 		
 		OpenSimplexNoise noise = new OpenSimplexNoise();
-		double[][] map = new double[64][64];
+		double[][] map = new double[44][44];
 		
 		List<RoadNode> path = null;
 		
@@ -45,8 +45,9 @@ public class Test {
 //				road = tempList;
 //				System.out.println()
 //			}
-			for(int i = 0; i < map.length - 1; i++) {
-				for(int k = 0; k < map[i].length; k++) {
+			for(int i = map.length - 1; i >= 0; i--) {
+				for(int k = map[i].length - 1; k >= 0; k--) {
+					
 					float current = (float) map[i][k];
 					//System.out.println(current / 100);
 					byte col = (byte) (256 * map[i][k]);
