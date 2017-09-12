@@ -80,7 +80,7 @@ public class Pathing {
 		}
 		
 		Vector2[] points = new Vector2[1000];
-		CatmullRomSpline<Vector2> spline = new CatmullRomSpline<>(dataSet, true);
+		CatmullRomSpline<Vector2> spline = new CatmullRomSpline<>(dataSet, false);
 		for(int i = 0; i < points.length; i++) {
 			points[i] = new Vector2();
 			spline.valueAt(points[i], ((float)i)/((float)points.length - 1));

@@ -1,5 +1,6 @@
 package com.reduc.alpha.screens;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Vector2;
@@ -102,9 +103,43 @@ public class MainMenuScreen extends ScreenAdapter {
 		}
 	}
 	
+	public Color getColor(int size, int index) {
+		int divisionSize = 1400 / size;
+		int value = divisionSize * index;
+		int red = 0;
+		int green = 0;
+		int blue = 0;
+		switch(value / 255) {
+			case 0:
+				red = 255;
+				blue = value;
+				break;
+			case 1:
+				red = 255 - value % 255;
+				blue = 255;
+				break;
+			case 2:
+				green = value % 255;
+				blue = 255;
+				break;
+			case 3:
+				green = 255;
+				blue = 255 - value % 255;
+				break;
+			case 4:
+				red = value % 255;
+				green = 255;
+				break;
+			default:
+				red = 255;
+				green = 255;
+		}
+		return new Color((float) red / 255, (float) green / 255, (float) blue / 255, 1);
+	}
+	
 	public void draw () {
 		Vector2 current = new Vector2(Gdx.graphics.getWidth() / 2.0f, 20);
-		Vector2 previous;
+		Vector2 previous = new Vector2(Gdx.graphics.getWidth() / 2.0f, 20);
 		GL20 gl = Gdx.gl20;
 		//gl.glClearColor(0, 0, 0, 1);
 		gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -119,13 +154,14 @@ public class MainMenuScreen extends ScreenAdapter {
 		
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 		shapeRenderer.setColor(1, 1, 0, 1);
+		shapeRenderer.setColor(new Color());
 		
 		System.out.println(path.length);
 		for(int i = 0; i < road.length; i++) {
+			shapeRenderer.setColor(getColor(road.length, i));
 			previous = current;
 			if(road[i] != null) {
-				current = new Vector2((current.x) + road[i].x * 10, (current.y) + road[i].y * 10);
-				
+				current = new Vector2((current.x) + road[i].x * 30, (current.y) + road[i].y * 60);
 				
 				shapeRenderer.line(previous.x, previous.y, current.x, current.y);
 			}
