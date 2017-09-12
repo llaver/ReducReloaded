@@ -1,6 +1,8 @@
 package com.reduc.alpha.screens;
 
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.CatmullRomSpline;
+import com.badlogic.gdx.math.Vector2;
 import com.reduc.alpha.Assets;
 import com.reduc.alpha.Settings;
 
@@ -8,8 +10,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.reduc.alpha.ReducReloaded;
+import com.reduc.alpha.util.OpenSimplexNoise;
+import com.reduc.alpha.util.Pathing;
+import com.reduc.alpha.util.Position;
+
+import java.util.List;
 
 /**
  * Created by rbell on 7/28/2017.
@@ -24,6 +32,19 @@ public class MainMenuScreen extends ScreenAdapter {
 	Rectangle helpBounds;
 	Vector3 touchPoint;
 	
+	Pathing pathing = new Pathing();
+	
+	OpenSimplexNoise noise = new OpenSimplexNoise();
+	double[][] map = new double[44][44];
+	
+	Vector2[] path = null;
+	Vector2[] road = null;
+	CatmullRomSpline<Vector2> curvedPath = new CatmullRomSpline<>();
+	
+	long time = System.currentTimeMillis();
+	
+	ShapeRenderer shapeRenderer;
+	
 	public MainMenuScreen(ReducReloaded game) {
 		this.game = game;
 		
@@ -36,6 +57,12 @@ public class MainMenuScreen extends ScreenAdapter {
 		highscoresBounds = new Rectangle(160 - 150, 200 - 18, 300, 36);
 		helpBounds = new Rectangle(160 - 150, 200 - 18 - 36, 300, 36);
 		touchPoint = new Vector3();
+		
+		shapeRenderer = new ShapeRenderer();
+		
+		path = pathing.generatePath(true, new Position());
+		road = pathing.convertPath(path);
+		
 	}
 	
 	public void update () {
@@ -76,8 +103,10 @@ public class MainMenuScreen extends ScreenAdapter {
 	}
 	
 	public void draw () {
+		Vector2 current = new Vector2(Gdx.graphics.getWidth() / 2.0f, 20);
+		Vector2 previous;
 		GL20 gl = Gdx.gl20;
-		gl.glClearColor(0, 0, 0, 1);
+		//gl.glClearColor(0, 0, 0, 1);
 		gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		guiCam.update();
 		game.batcher.setProjectionMatrix(guiCam.combined);
@@ -86,6 +115,25 @@ public class MainMenuScreen extends ScreenAdapter {
 		game.batcher.begin();
 		//game.batcher.draw(Assets.backgroundRegion, 0, 0, 320, 480);
 		game.batcher.end();
+		
+		
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+		shapeRenderer.setColor(1, 1, 0, 1);
+		
+		System.out.println(path.length);
+		for(int i = 0; i < road.length; i++) {
+			previous = current;
+			if(road[i] != null) {
+				current = new Vector2((current.x) + road[i].x * 10, (current.y) + road[i].y * 10);
+				
+				
+				shapeRenderer.line(previous.x, previous.y, current.x, current.y);
+			}
+		}
+		shapeRenderer.end();
+		
+		
+		
 		
 		game.batcher.enableBlending();
 		game.batcher.begin();

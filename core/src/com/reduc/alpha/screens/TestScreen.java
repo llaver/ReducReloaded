@@ -27,6 +27,10 @@ public class TestScreen extends ScreenAdapter {
 	
 	@Override
 	public void pause() {
+		pauseComponents();
+	}
+	
+	private void pauseComponents() {
 	
 	}
 }

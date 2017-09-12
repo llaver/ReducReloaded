@@ -1,5 +1,7 @@
 package com.reduc.alpha.util;
 
+import com.badlogic.gdx.math.CatmullRomSpline;
+import com.badlogic.gdx.math.Vector2;
 import com.reduc.alpha.util.astar.Map;
 import com.reduc.alpha.util.astar.RoadNode;
 import com.reduc.alpha.util.astar.RoadNodeFactory;
@@ -51,9 +53,8 @@ public class Pathing {
 		
 	}
 	
-	public List<RoadNode> generatePath(boolean firstRun, Position endOfPath) {
+	public Vector2[] generatePath(boolean firstRun, Position endOfPath) {
 		noise = new OpenSimplexNoise(r.nextLong());
-		List<Position> line = new ArrayList<>();
 		if(firstRun) {
 			//TODO Add Straight Section
 			
@@ -72,17 +73,33 @@ public class Pathing {
 		} else {
 			path = roadMap.findPath(0, (int) endOfPath.getY(), sampleSize - 1, r.nextInt(sampleSize - 1));
 		}
-		//roadMap.drawMap(path);
 		
-		//TODO Convert to good format for the game
-		//Get Screen Width
-		//Scale Path Width to Screen Width
-		//Scale Y somehow?
-		//????????????
-		//Profit
-		//TODO figure out ??????????
+		Vector2[] dataSet = new Vector2[path.size()];
+		for(int i = 0; i < path.size(); i++) {
+			dataSet[i] = new Vector2(path.get(i).getxPosition(), path.get(i).getyPosition());
+		}
 		
-		return path;
+		Vector2[] points = new Vector2[1000];
+		CatmullRomSpline<Vector2> spline = new CatmullRomSpline<>(dataSet, true);
+		for(int i = 0; i < points.length; i++) {
+			points[i] = new Vector2();
+			spline.valueAt(points[i], ((float)i)/((float)points.length - 1));
+		}
+		return points;
+	}
+	
+	public Vector2[] convertPath(Vector2[] path) {
+		Vector2 current = null;
+		Vector2 previous = null;
+		Vector2[] updatedPath = new Vector2[path.length];
+		for(int i = 0; i < path.length; i++) {
+			previous = current;
+			current = path[i];
+			if(previous != null) {
+				updatedPath[i] = new Vector2(current.x - previous.x, current.y - previous.y);
+			}
+		}
+		return updatedPath;
 	}
 	
 //	void update() {

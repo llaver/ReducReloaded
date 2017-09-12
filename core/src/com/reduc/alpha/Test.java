@@ -22,7 +22,7 @@ public class Test {
 		OpenSimplexNoise noise = new OpenSimplexNoise();
 		double[][] map = new double[44][44];
 		
-		List<RoadNode> path = null;
+		Vector2[] path = null;
 		
 		long time = System.currentTimeMillis();
 		for(int l = 0; l < 5; l++) {
@@ -30,50 +30,56 @@ public class Test {
 			if(l == 0) {
 				path = pathing.generatePath(true, new Position());
 			}
-			else {
-				int x = path.get(path.size() - 1).getxPosition();
-				int y = path.get(path.size() - 1).getyPosition();
-				path = pathing.generatePath(false, new Position(path.get(path.size() - 1).getxPosition(), path.get(path.size() - 1).getyPosition()));
-			}
-			
-			for(RoadNode rn : path) {
-				road.add(new Vector2(rn.getxPosition(), rn.getyPosition()));
-			}
+//			else {
+//				int x = (int) path[path.size() - 1].getX();
+//				int y = (int) path.get(path.size() - 1).getY();
+//				path = pathing.generatePath(false, new Position(path.get(path.size() - 1).getX(), path.get(path.size() - 1).getX()));
+//			}
+//
+//			for(Position p : path) {
+//				road.add(new Vector2(p.getX(), p.getY()));
+//			}
 //			for(int i = 1; i < road.size(); i++) {
 //				List<Vector2> tempList = new ArrayList<>();
 //				tempList.add(road.get(i - 1).interpolate(road.get(i), .5f, Interpolation.circleOut));
 //				road = tempList;
 //				System.out.println()
 //			}
-			for(int i = map.length - 1; i >= 0; i--) {
-				for(int k = map[i].length - 1; k >= 0; k--) {
-					
-					float current = (float) map[i][k];
-					//System.out.println(current / 100);
-					byte col = (byte) (256 * map[i][k]);
-					//g.setColor(new Color(col, col, col));
-					//g.fillRect(i * 10, k * 10, (i + 1) * 10, (k + 1) * 10);
-					
-					if(current >= -.2 && current <= .2 && !road.contains(new Vector2(i, k))) {
-						//g.setColor(Color.darkGray);
-						//g.fillRect(i, k, i, k);
-						//g.fillRect(i * 10, k * 10, (i + 1) * 10, (k + 1) * 10);
-						System.out.print(" ");
-					} else if(road.contains(new Vector2(i, k))) {
-						//g.setColor(Color.green);
-						//g.fillRect(i, k, i,k);
-						//g.fillRect(i * 10, k * 10, (i + 1) * 10, (k + 1) * 10);
-						System.out.print("X");
-						//System.out.println("X: " + i + " Y: " + k);
-					} else {
-						//g.setColor(Color.black);
-						//g.fillRect(i, k, i, k);
-						//g.fillRect(i * 10, k * 10, (i + 1) * 10, (k + 1) * 10);
-						System.out.print("@");
-					}
-				}
-				System.out.println("");
-			}
+//			for(int i = map.length - 1; i >= 0; i--) {
+//				for(int k = map[i].length - 1; k >= 0; k--) {
+//
+//					float current = (float) map[i][k];
+//					//System.out.println(current / 100);
+//					byte col = (byte) (256 * map[i][k]);
+//					//g.setColor(new Color(col, col, col));
+//					//g.fillRect(i * 10, k * 10, (i + 1) * 10, (k + 1) * 10);
+//
+//					if(current >= -.2 && current <= .2 && !road.contains(new Vector2(i, k))) {
+//						//g.setColor(Color.darkGray);
+//						//g.fillRect(i, k, i, k);
+//						//g.fillRect(i * 10, k * 10, (i + 1) * 10, (k + 1) * 10);
+//						System.out.print(" ");
+//					} else if(road.contains(new Vector2(i, k))) {
+//						//g.setColor(Color.green);
+//						//g.fillRect(i, k, i,k);
+//						//g.fillRect(i * 10, k * 10, (i + 1) * 10, (k + 1) * 10);
+//						System.out.print("X");
+//						//System.out.println("X: " + i + " Y: " + k);
+//					} else {
+//						//g.setColor(Color.black);
+//						//g.fillRect(i, k, i, k);
+//						//g.fillRect(i * 10, k * 10, (i + 1) * 10, (k + 1) * 10);
+//						System.out.print("@");
+//					}
+//				}
+//				System.out.println("");
+//			}
+			
+//			for(int i = 0; i < path.size(); i++) {
+//				System.out.println("Delta X: " + path.get(i).getX() + " Delta Y: " + path.get(i).getY());
+//
+//			}
+//
 		}
 		long end = System.currentTimeMillis();
 		System.out.println("Took " + (end - time) + " ms");
