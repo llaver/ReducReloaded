@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.reduc.alpha.ReducReloaded;
+import com.reduc.alpha.util.GraphicUtil;
 import com.reduc.alpha.util.OpenSimplexNoise;
 import com.reduc.alpha.util.Pathing;
 import com.reduc.alpha.util.Position;
@@ -62,11 +63,11 @@ public class MainMenuScreen extends ScreenAdapter {
 		shapeRenderer = new ShapeRenderer();
 		
 		path = pathing.generatePath(true, new Position());
-		road = pathing.convertPath(path);
+		road = pathing.extendPath(pathing.extendPath(pathing.convertPath(path)));
 		
 	}
 	
-	public void update () {
+	public void update (float delta) {
 		if (Gdx.input.justTouched()) {
 			guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 			
@@ -104,7 +105,7 @@ public class MainMenuScreen extends ScreenAdapter {
 	}
 	
 	public Color getColor(int size, int index) {
-		int divisionSize = 1400 / size;
+		int divisionSize = 4000 / size;
 		int value = divisionSize * index;
 		int red = 0;
 		int green = 0;
@@ -151,25 +152,60 @@ public class MainMenuScreen extends ScreenAdapter {
 		//game.batcher.draw(Assets.backgroundRegion, 0, 0, 320, 480);
 		game.batcher.end();
 		
+		//Gdx.gl.glLineWidth(32); // Or whatever thickness you need
 		
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 		shapeRenderer.setColor(1, 1, 0, 1);
 		shapeRenderer.setColor(new Color());
 		
-		System.out.println(path.length);
+//		Vector2[] gridSpace = pathing.convertToGridspace(road);
+//		Vector2[] normals = new Vector2[road.length];
+//
+//		for(int i = 1; i < gridSpace.length; i++) {
+//			if(gridSpace[i] != null && gridSpace[i - 1] != null) {
+//				float dx = gridSpace[i].x - gridSpace[i - 1].x;
+//				float dy = gridSpace[i].y - gridSpace[i - 1].y;
+//				System.out.println(dx + "  " + dy);
+//
+//				normals[i] = new Vector2(dx, dy);
+//			} else {
+//				normals[i] = new Vector2(0, 0);
+//			}
+//		}
+		
 		for(int i = 0; i < road.length; i++) {
 			shapeRenderer.setColor(getColor(road.length, i));
 			previous = current;
 			if(road[i] != null) {
-				current = new Vector2((current.x) + road[i].x * 30, (current.y) + road[i].y * 60);
+				current = new Vector2((current.x) + road[i].x * 10, (current.y) + road[i].y * 2);
 				
 				shapeRenderer.line(previous.x, previous.y, current.x, current.y);
+				shapeRenderer.setColor(1, 1, 0, 1);
+				shapeRenderer.line(previous.x - 20, previous.y, current.x - 20, current.y);
+				shapeRenderer.line(previous.x + 20, previous.y, current.x + 20, current.y);
+				//shapeRenderer.line(previous.x, previous.y - 5, current.x, current.y + 5);
+				//shapeRenderer.line(previous.x - 5, previous.y - 5, current.x + 5, current.y + 5);
+				
+				
+				
+				
+				
 			}
 		}
+//		for(int i = 0; i < normals.length; i++) {
+//			if(normals[i] != null && normals[i - 1] != null) {
+//				shapeRenderer.setColor(1, 1, 0, 1);
+//				shapeRenderer.line(normals[i].x, normals[i].y, normals[i - 1].x, normals[i - 1].y);
+//				System.out.println("THIS SHOULD BE DOING SOMETHING");
+//			}
+//		}
 		shapeRenderer.end();
 		
 		
-		
+		road = cyclePath(road);
+		if(road.length < 2000) {
+			road = pathing.extendPath(road);
+		}
 		
 		game.batcher.enableBlending();
 		game.batcher.begin();
@@ -179,9 +215,31 @@ public class MainMenuScreen extends ScreenAdapter {
 		game.batcher.end();
 	}
 	
+	private Vector2[] cyclePath(Vector2[] current) {
+		Vector2[] newPath = new Vector2[current.length - 1];
+		for(int i = 1; i < current.length; i++) {
+			if(current[i] != null) {
+				newPath[i - 1] = current[i];
+			} else {
+				newPath[i - 1] = new Vector2(0, 0);
+			}
+		}
+		
+		
+//		//System.out.println(angle);
+//		float angle = newPath[0].angle(newPath[1]);
+//		for(int i = 0; i < newPath.length - 1; i++) {
+//			newPath[i] = GraphicUtil.rotatePoint(newPath[i + 1], newPath[0], angle);
+//		}
+		
+		return newPath;
+	}
+	
+	
+	
 	@Override
 	public void render (float delta) {
-		update();
+		update(delta);
 		draw();
 	}
 	

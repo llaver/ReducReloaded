@@ -27,7 +27,7 @@ public class Pathing {
 	private List<RoadNode> path;
 	
 	public Pathing() {
-		position = new Position(0,0);
+		position = new Position(0, 0);
 		r = new Random();
 		sampleSize = 45;
 		map = new double[45][45];
@@ -38,7 +38,7 @@ public class Pathing {
 	/**
 	 * Create a new pathing object for generating noise and paths
 	 *
-	 * @param position Starting/current position
+	 * @param position   Starting/current position
 	 * @param sampleSize Size of the width and height of the noise. 32 - 45 works best
 	 * @param noiseLevel A value for manipulating the noise. Since the path is based on the noise,
 	 *                   a higher value does not mean a curvier line. Best values are .05 - .25
@@ -83,7 +83,7 @@ public class Pathing {
 		CatmullRomSpline<Vector2> spline = new CatmullRomSpline<>(dataSet, false);
 		for(int i = 0; i < points.length; i++) {
 			points[i] = new Vector2();
-			spline.valueAt(points[i], ((float)i)/((float)points.length - 1));
+			spline.valueAt(points[i], ((float) i) / ((float) points.length - 1));
 		}
 		return points;
 	}
@@ -102,6 +102,36 @@ public class Pathing {
 		return updatedPath;
 	}
 	
+	public Vector2[] extendPath(Vector2[] path) {
+		Vector2[] generatedPath = convertPath(generatePath(false, new Position(path[path.length - 1].x, path[path.length - 1].y)));
+		Vector2[] newPath = new Vector2[path.length + generatedPath.length];
+		int counter = 0;
+		for(Vector2 v2 : path) {
+			newPath[counter] = v2;
+			counter++;
+		}
+		for(Vector2 v2 : generatedPath) {
+			newPath[counter] = v2;
+			counter++;
+		}
+		return newPath;
+	}
+	
+	public Vector2[] convertToGridspace(Vector2[] path) {
+		
+		Vector2[] gridPath = new Vector2[path.length];
+		gridPath[0] = path[0];
+		for(int i = 1; i < path.length; i++) {
+			if(path[i] != null && path[i - 1] != null) {
+				Vector2 temp = new Vector2(path[i - 1].x + path[i].x, path[i - 1].y + path[i].y);
+				gridPath[i] = temp;
+			} else {
+				gridPath[i] = new Vector2();
+			}
+		}
+		return gridPath;
+	}
+
 //	void update() {
 //		float cor = dRange*atan(15*dAngle)/PI;
 //		float randNum = (random(2)-1)*dRange-cor;  //Random number from (-dRange, dRange)
