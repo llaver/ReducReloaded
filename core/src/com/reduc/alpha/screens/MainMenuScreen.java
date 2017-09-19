@@ -181,8 +181,27 @@ public class MainMenuScreen extends ScreenAdapter {
 				
 				shapeRenderer.line(previous.x, previous.y, current.x, current.y);
 				shapeRenderer.setColor(1, 1, 0, 1);
-				shapeRenderer.line(previous.x - 20, previous.y, current.x - 20, current.y);
-				shapeRenderer.line(previous.x + 20, previous.y, current.x + 20, current.y);
+				
+				float dx = current.x - previous.x;
+				float dy = current.y - previous.y;
+				
+				Vector2 currentNormal = new Vector2(current.x, current.y);
+				Vector2 previousNormal = new Vector2(previous.x, previous.y);
+				
+				float crs = currentNormal.crs(previousNormal);
+				
+				shapeRenderer.line(previousNormal, currentNormal);
+				
+				System.out.println("crs: " + crs);
+				
+				//System.out.println(normal);
+				//System.out.println(-dy * current.x + " " + dx * current.y + " " + current.x + " " + current.y);
+				
+				//shapeRenderer.line(-dy * current.x, dx * current.y, current.x, current.y);
+				
+				
+				//shapeRenderer.line(previous.x - 20, previous.y, current.x - 20, current.y);
+				//shapeRenderer.line(previous.x + 20, previous.y, current.x + 20, current.y);
 				//shapeRenderer.line(previous.x, previous.y - 5, current.x, current.y + 5);
 				//shapeRenderer.line(previous.x - 5, previous.y - 5, current.x + 5, current.y + 5);
 				
