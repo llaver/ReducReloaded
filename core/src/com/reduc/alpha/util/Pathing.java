@@ -62,7 +62,7 @@ public class Pathing implements Runnable {
 	}
 	
 	public Pathing(Vector2[] path) {
-		endOfPath = path[path.length - 1];
+		this.endOfPath = endOfPath;
 		firstRun = false;
 	}
 	
@@ -148,11 +148,6 @@ public class Pathing implements Runnable {
 	
 	@Override
 	public void run() {
-		if(firstRun) {
-			generatePath();
-		} else {
-			//extendPath();
-		}
 		
 	}
 

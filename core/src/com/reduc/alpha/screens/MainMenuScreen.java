@@ -61,7 +61,7 @@ public class MainMenuScreen extends ScreenAdapter {
 		
 		shapeRenderer = new ShapeRenderer();
 		
-		path = pathing.generatePath(true, new Vector2());
+		path = pathing.generatePath();
 		road = pathing.extendPath(pathing.extendPath(pathing.convertPath(path)));
 	}
 	
