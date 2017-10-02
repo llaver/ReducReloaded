@@ -13,7 +13,7 @@ import java.util.Random;
 /**
  * Created by rbell on 8/3/2017.
  */
-public class Pathing {
+public class Pathing implements Runnable {
 	
 	private Position position; //Position of path
 	
@@ -23,6 +23,9 @@ public class Pathing {
 	private double noiseLevel;
 	private int sampleSize;
 	
+	private Vector2 endOfPath;
+	private boolean firstRun = true;
+	
 	private Map<RoadNode> roadMap;
 	private List<RoadNode> path;
 	
@@ -31,7 +34,7 @@ public class Pathing {
 		r = new Random();
 		sampleSize = 45;
 		map = new double[45][45];
-		roadMap = new Map<RoadNode>(45, 45, new RoadNodeFactory());
+		roadMap = new Map<>(45, 45, new RoadNodeFactory());
 		noiseLevel = .15;
 	}
 	
@@ -48,30 +51,39 @@ public class Pathing {
 		r = new Random();
 		this.sampleSize = sampleSize;
 		map = new double[sampleSize][sampleSize];
-		roadMap = new Map<RoadNode>(sampleSize, sampleSize, new RoadNodeFactory());
+		roadMap = new Map<>(sampleSize, sampleSize, new RoadNodeFactory());
 		this.noiseLevel = noiseLevel;
 		
 	}
 	
-	public Vector2[] generatePath(boolean firstRun, Position endOfPath) {
+	public Pathing(Vector2 endOfPath) {
+		this.endOfPath = endOfPath;
+		firstRun = false;
+	}
+	
+	public Pathing(Vector2[] path) {
+		endOfPath = path[path.length - 1];
+		firstRun = false;
+	}
+	
+	public Vector2[] generatePath() {
+		//Generate Noise for "random" pathing generation
 		noise = new OpenSimplexNoise(r.nextLong());
 		if(firstRun) {
 			//TODO Add Straight Section
 			
 		}
 		
+		//Create a Map based on noise.
 		for(int i = 0; i < map.length; i++) {
-			//System.out.print("\n*");
 			for(int k = 0; k < map[i].length; k++) {
 				map[i][k] = noise.eval(i * noiseLevel, k * noiseLevel);
-				//System.out.println("i10: " + i * 10 + " k10: " + k * 10 + " 1i10: " + (i + 1) * 10 + " 1k10: " + (k + 1) * 10);
-				//System.out.println(map[i][k]);
 			}
 		}
 		if(firstRun) {
 			path = roadMap.findPath(0, 0, sampleSize - 1, r.nextInt(sampleSize - 1));
 		} else {
-			path = roadMap.findPath(0, (int) endOfPath.getY(), sampleSize - 1, r.nextInt(sampleSize - 1));
+			path = roadMap.findPath(0, (int) endOfPath.y, sampleSize - 1, r.nextInt(sampleSize - 1));
 		}
 		
 		Vector2[] dataSet = new Vector2[path.size()];
@@ -79,7 +91,7 @@ public class Pathing {
 			dataSet[i] = new Vector2(path.get(i).getxPosition(), path.get(i).getyPosition());
 		}
 		
-		Vector2[] points = new Vector2[1000];
+		Vector2[] points = new Vector2[dataSet.length];
 		CatmullRomSpline<Vector2> spline = new CatmullRomSpline<>(dataSet, false);
 		for(int i = 0; i < points.length; i++) {
 			points[i] = new Vector2();
@@ -103,7 +115,9 @@ public class Pathing {
 	}
 	
 	public Vector2[] extendPath(Vector2[] path) {
-		Vector2[] generatedPath = convertPath(generatePath(false, new Position(path[path.length - 1].x, path[path.length - 1].y)));
+		firstRun = false;
+		endOfPath = new Vector2(path[path.length - 1].x, path[path.length - 1].y);
+		Vector2[] generatedPath = convertPath(generatePath());
 		Vector2[] newPath = new Vector2[path.length + generatedPath.length];
 		int counter = 0;
 		for(Vector2 v2 : path) {
@@ -130,6 +144,16 @@ public class Pathing {
 			}
 		}
 		return gridPath;
+	}
+	
+	@Override
+	public void run() {
+		if(firstRun) {
+			generatePath();
+		} else {
+			//extendPath();
+		}
+		
 	}
 
 //	void update() {

@@ -50,7 +50,6 @@ public class MainMenuScreen extends ScreenAdapter {
 	public MainMenuScreen(ReducReloaded game) {
 		this.game = game;
 		
-		
 		//TODO Update these values to actually mean something
 		guiCam = new OrthographicCamera(320, 480);
 		guiCam.position.set(320 / 2, 480 / 2, 0);
@@ -62,9 +61,8 @@ public class MainMenuScreen extends ScreenAdapter {
 		
 		shapeRenderer = new ShapeRenderer();
 		
-		path = pathing.generatePath(true, new Position());
+		path = pathing.generatePath(true, new Vector2());
 		road = pathing.extendPath(pathing.extendPath(pathing.convertPath(path)));
-		
 	}
 	
 	public void update (float delta) {
@@ -141,6 +139,7 @@ public class MainMenuScreen extends ScreenAdapter {
 	public void draw () {
 		Vector2 current = new Vector2(Gdx.graphics.getWidth() / 2.0f, 20);
 		Vector2 previous = new Vector2(Gdx.graphics.getWidth() / 2.0f, 20);
+		Vector2 old = new Vector2(Gdx.graphics.getWidth() / 2.0f, 20);
 		GL20 gl = Gdx.gl20;
 		//gl.glClearColor(0, 0, 0, 1);
 		gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -175,39 +174,50 @@ public class MainMenuScreen extends ScreenAdapter {
 		
 		for(int i = 0; i < road.length; i++) {
 			shapeRenderer.setColor(getColor(road.length, i));
+			old = previous;
 			previous = current;
 			if(road[i] != null) {
-				current = new Vector2((current.x) + road[i].x * 10, (current.y) + road[i].y * 2);
+				current = new Vector2((current.x) + road[i].x * 10, (current.y) + road[i].y * 10);
 				
 				shapeRenderer.line(previous.x, previous.y, current.x, current.y);
 				shapeRenderer.setColor(1, 1, 0, 1);
 				
-				float dx = current.x - previous.x;
-				float dy = current.y - previous.y;
+				//Calculate left
+				float left_x1 = current.x;
+				float left_y1 = current.y;
+				float left_x2 = previous.x;
+				float left_y2 = previous.y;
+				float D = 30;
 				
-				Vector2 currentNormal = new Vector2(current.x, current.y);
-				Vector2 previousNormal = new Vector2(previous.x, previous.y);
+				float left_dx = left_x1-left_x2;
+				float left_dy = left_y1-left_y2;
+				float left_dist = (float) Math.sqrt(left_dx*left_dx + left_dy*left_dy);
+				left_dx /= left_dist;
+				left_dy /= left_dist;
+				float left_x3 = left_x1 + D * left_dy;
+				float left_y3 = left_y1 - D * left_dx;
+				float left_x4 = left_x1 - D * left_dy;
+				float left_y4 = left_y1 + D * left_dx;
 				
-				float crs = currentNormal.crs(previousNormal);
+				//Calculate right
+				float right_x1 = previous.x;
+				float right_y1 = previous.y;
+				float right_x2 = old.x;
+				float right_y2 = old.y;
 				
-				shapeRenderer.line(previousNormal, currentNormal);
-				
-				System.out.println("crs: " + crs);
-				
-				//System.out.println(normal);
-				//System.out.println(-dy * current.x + " " + dx * current.y + " " + current.x + " " + current.y);
-				
-				//shapeRenderer.line(-dy * current.x, dx * current.y, current.x, current.y);
-				
-				
-				//shapeRenderer.line(previous.x - 20, previous.y, current.x - 20, current.y);
-				//shapeRenderer.line(previous.x + 20, previous.y, current.x + 20, current.y);
-				//shapeRenderer.line(previous.x, previous.y - 5, current.x, current.y + 5);
-				//shapeRenderer.line(previous.x - 5, previous.y - 5, current.x + 5, current.y + 5);
-				
+				float right_dx = right_x1-right_x2;
+				float right_dy = right_y1-right_y2;
+				float dist = (float) Math.sqrt(right_dx*right_dx + right_dy*right_dy);
+				right_dx /= dist;
+				right_dy /= dist;
+				float right_x3 = right_x1 + D * right_dy;
+				float right_y3 = right_y1 - D * right_dx;
+				float right_x4 = right_x1 - D * right_dy;
+				float right_y4 = right_y1 + D * right_dx;
 				
 				
-				
+				shapeRenderer.line(right_x3, right_y3, left_x3, left_y3);
+				shapeRenderer.line(right_x4, right_y4, left_x4, left_y4);
 				
 			}
 		}
@@ -257,13 +267,13 @@ public class MainMenuScreen extends ScreenAdapter {
 	
 	
 	@Override
-	public void render (float delta) {
+	public void render(float delta) {
 		update(delta);
 		draw();
 	}
 	
 	@Override
-	public void pause () {
+	public void pause() {
 		Settings.save();
 	}
 	
