@@ -1,5 +1,6 @@
 package com.reduc.alpha.util;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Vector2;
 import com.reduc.alpha.util.astar.Map;
@@ -13,7 +14,7 @@ import java.util.Random;
 /**
  * Created by rbell on 8/3/2017.
  */
-public class Pathing implements Runnable {
+public class Pathing {
 	
 	private Position position; //Position of path
 	
@@ -146,9 +147,44 @@ public class Pathing implements Runnable {
 		return gridPath;
 	}
 	
-	@Override
-	public void run() {
+	public Vector2[][] calculateBounds(Vector2[] path) {
 		
+		Vector2 current = new Vector2(Gdx.graphics.getWidth() / 2.0f, 20);
+		Vector2 previous = new Vector2(Gdx.graphics.getWidth() / 2.0f, 20);
+		
+		Vector2[][] results = new Vector2[2][path.length - 1];
+		
+		for(int i = 0; i < path.length - 1; i++) {
+		
+			if(path[i] != null) {
+				//Set needed vars
+				float x1 = current.x;
+				float y1 = current.y;
+				float x2 = previous.x;
+				float y2 = previous.y;
+				float D = 30;
+				
+				//Calculate center point
+				float dx = x1 - x2;
+				float dy = y1 - y2;
+				
+				//Calculate normals (Voodoo)
+				float dist = (float) Math.sqrt(dx * dx + dy * dy);
+				dx /= dist;
+				dy /= dist;
+				float x3 = x1 + D * dy;
+				float y3 = y1 - D * dx;
+				float x4 = x1 - D * dy;
+				float y4 = y1 + D * dx;
+				
+				results[0][i] = new Vector2(x3, y3);
+				results[1][i] = new Vector2(x4, y4);
+			} else {
+				results[0][i] = new Vector2();
+				results[1][i] = new Vector2();
+			}
+		}
+		return results;
 	}
 
 //	void update() {

@@ -2,9 +2,7 @@ package com.reduc.alpha.screens;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Vector2;
-import com.reduc.alpha.Assets;
 import com.reduc.alpha.Settings;
 
 import com.badlogic.gdx.Gdx;
@@ -14,12 +12,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.reduc.alpha.ReducReloaded;
-import com.reduc.alpha.util.GraphicUtil;
-import com.reduc.alpha.util.OpenSimplexNoise;
+import com.reduc.alpha.entities.Road;
 import com.reduc.alpha.util.Pathing;
-import com.reduc.alpha.util.Position;
-
-import java.util.List;
+import com.reduc.alpha.util.threads.CalculationsThread;
 
 /**
  * Created by rbell on 7/28/2017.
@@ -27,25 +22,22 @@ import java.util.List;
 public class MainMenuScreen extends ScreenAdapter {
 
 	private ReducReloaded game;
-	OrthographicCamera guiCam;
-	Rectangle settingsBounds;
-	Rectangle playBounds;
-	Rectangle highscoresBounds;
-	Rectangle helpBounds;
-	Vector3 touchPoint;
+	private OrthographicCamera guiCam;
+	private Rectangle settingsBounds;
+	private Rectangle playBounds;
+	private Rectangle highscoresBounds;
+	private Rectangle helpBounds;
+	private Vector3 touchPoint;
 	
-	Pathing pathing = new Pathing();
+	public final Road road = new Road();
 	
-	OpenSimplexNoise noise = new OpenSimplexNoise();
-	double[][] map = new double[44][44];
-	
-	Vector2[] path = null;
-	Vector2[] road = null;
-	CatmullRomSpline<Vector2> curvedPath = new CatmullRomSpline<>();
+	int count = 0;
 	
 	long time = System.currentTimeMillis();
 	
 	ShapeRenderer shapeRenderer;
+	
+	private CalculationsThread calcThread;
 	
 	public MainMenuScreen(ReducReloaded game) {
 		this.game = game;
@@ -61,8 +53,8 @@ public class MainMenuScreen extends ScreenAdapter {
 		
 		shapeRenderer = new ShapeRenderer();
 		
-		path = pathing.generatePath();
-		road = pathing.extendPath(pathing.extendPath(pathing.convertPath(path)));
+		calcThread = new CalculationsThread(this);
+		calcThread.start();
 	}
 	
 	public void update (float delta) {
@@ -72,7 +64,7 @@ public class MainMenuScreen extends ScreenAdapter {
 			/* PLAY GAME */
 			if (playBounds.contains(touchPoint.x, touchPoint.y)) {
 				//Assets.playSound(Assets.clickSound);
-				game.setScreen(new GameScreen(game));
+				//game.setScreen(new GameScreen(game));
 				return;
 			}
 			/* HIGH SCORES */
@@ -157,8 +149,8 @@ public class MainMenuScreen extends ScreenAdapter {
 		shapeRenderer.setColor(1, 1, 0, 1);
 		shapeRenderer.setColor(new Color());
 		
-//		Vector2[] gridSpace = pathing.convertToGridspace(road);
-//		Vector2[] normals = new Vector2[road.length];
+//		Vector2[] gridSpace = pathing.convertToGridspace(roadPath);
+//		Vector2[] normals = new Vector2[roadPath.length];
 //
 //		for(int i = 1; i < gridSpace.length; i++) {
 //			if(gridSpace[i] != null && gridSpace[i - 1] != null) {
@@ -172,52 +164,23 @@ public class MainMenuScreen extends ScreenAdapter {
 //			}
 //		}
 		
-		for(int i = 0; i < road.length; i++) {
-			shapeRenderer.setColor(getColor(road.length, i));
+		Vector2[][] roadPath = road.getAll();
+		Vector2[] center = roadPath[0];
+		Vector2[] leftCurb = roadPath[1];
+		Vector2[] rightCurb = roadPath[2];
+		
+		for(int i = 0; i < center.length - 1; i++) {
+			shapeRenderer.setColor(getColor(roadPath.length, i));
 			old = previous;
 			previous = current;
-			if(road[i] != null) {
-				current = new Vector2((current.x) + road[i].x * 10, (current.y) + road[i].y * 10);
+			if(center[i] != null && center[i + 1] != null) {
+				current = new Vector2((current.x) + center[i].x * 50, (current.y) + center[i].y * 50);
 				
 				shapeRenderer.line(previous.x, previous.y, current.x, current.y);
 				shapeRenderer.setColor(1, 1, 0, 1);
 				
-				//Calculate left
-				float left_x1 = current.x;
-				float left_y1 = current.y;
-				float left_x2 = previous.x;
-				float left_y2 = previous.y;
-				float D = 30;
-				
-				float left_dx = left_x1-left_x2;
-				float left_dy = left_y1-left_y2;
-				float left_dist = (float) Math.sqrt(left_dx*left_dx + left_dy*left_dy);
-				left_dx /= left_dist;
-				left_dy /= left_dist;
-				float left_x3 = left_x1 + D * left_dy;
-				float left_y3 = left_y1 - D * left_dx;
-				float left_x4 = left_x1 - D * left_dy;
-				float left_y4 = left_y1 + D * left_dx;
-				
-				//Calculate right
-				float right_x1 = previous.x;
-				float right_y1 = previous.y;
-				float right_x2 = old.x;
-				float right_y2 = old.y;
-				
-				float right_dx = right_x1-right_x2;
-				float right_dy = right_y1-right_y2;
-				float dist = (float) Math.sqrt(right_dx*right_dx + right_dy*right_dy);
-				right_dx /= dist;
-				right_dy /= dist;
-				float right_x3 = right_x1 + D * right_dy;
-				float right_y3 = right_y1 - D * right_dx;
-				float right_x4 = right_x1 - D * right_dy;
-				float right_y4 = right_y1 + D * right_dx;
-				
-				
-				shapeRenderer.line(right_x3, right_y3, left_x3, left_y3);
-				shapeRenderer.line(right_x4, right_y4, left_x4, left_y4);
+				shapeRenderer.line(leftCurb[i].x, leftCurb[i].y, leftCurb[i + 1].x, leftCurb[i + 1].y);
+				shapeRenderer.line(rightCurb[i].x, rightCurb[i].y, rightCurb[i + 1].x, rightCurb[i + 1].y);
 				
 			}
 		}
@@ -230,11 +193,14 @@ public class MainMenuScreen extends ScreenAdapter {
 //		}
 		shapeRenderer.end();
 		
-		
-		road = cyclePath(road);
-		if(road.length < 2000) {
-			road = pathing.extendPath(road);
+		if(count == 10) {
+			center = cyclePath(center);
+			leftCurb = cyclePath(leftCurb);
+			rightCurb = cyclePath(rightCurb);
+			count = 0;
 		}
+		
+		count++;
 		
 		game.batcher.enableBlending();
 		game.batcher.begin();
@@ -245,23 +211,26 @@ public class MainMenuScreen extends ScreenAdapter {
 	}
 	
 	private Vector2[] cyclePath(Vector2[] current) {
-		Vector2[] newPath = new Vector2[current.length - 1];
-		for(int i = 1; i < current.length; i++) {
-			if(current[i] != null) {
-				newPath[i - 1] = current[i];
-			} else {
-				newPath[i - 1] = new Vector2(0, 0);
+		if(current.length > 0) {
+			Vector2[] newPath = new Vector2[current.length - 1];
+			for(int i = 1; i < current.length; i++) {
+				if(current[i] != null) {
+					newPath[i - 1] = current[i];
+				} else {
+					newPath[i - 1] = new Vector2(0, 0);
+				}
 			}
-		}
-		
-		
+
 //		//System.out.println(angle);
 //		float angle = newPath[0].angle(newPath[1]);
 //		for(int i = 0; i < newPath.length - 1; i++) {
 //			newPath[i] = GraphicUtil.rotatePoint(newPath[i + 1], newPath[0], angle);
 //		}
-		
-		return newPath;
+			
+			return newPath;
+		} else {
+			return current;
+		}
 	}
 	
 	
@@ -275,6 +244,8 @@ public class MainMenuScreen extends ScreenAdapter {
 	@Override
 	public void pause() {
 		Settings.save();
+		calcThread.stopThread();
+		
 	}
 	
 	

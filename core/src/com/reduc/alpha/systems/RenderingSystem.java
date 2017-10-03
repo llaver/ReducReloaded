@@ -53,8 +53,9 @@ public class RenderingSystem extends IteratingSystem {
 		comparator = new Comparator<Entity>() {
 			@Override
 			public int compare(Entity entityA, Entity entityB) {
-				return (int)Math.signum(transformM.get(entityB).pos.z -
-					transformM.get(entityA).pos.z);
+				//return (int)Math.signum(transformM.get(entityB).pos.z -
+				//	transformM.get(entityA).pos.z);
+				return 1;
 			}
 		};
 		

@@ -103,7 +103,7 @@ public class World {
 //		bounds.bounds.width = BobComponent.WIDTH;
 //		bounds.bounds.height = BobComponent.HEIGHT;
 
-		position.pos.set(5.0f, 1.0f, 0.0f);
+		//position.pos.set(5.0f, 1.0f, 0.0f);
 
 //		state.set(BobComponent.STATE_JUMP);
 
@@ -138,7 +138,7 @@ public class World {
 //		bounds.bounds.width = PlatformComponent.WIDTH;
 //		bounds.bounds.height = PlatformComponent.HEIGHT;
 
-		position.pos.set(x, y, 1.0f);
+		//position.pos.set(x, y, 1.0f);
 
 //		state.set(PlatformComponent.STATE_NORMAL);
 
@@ -169,7 +169,7 @@ public class World {
 //		bounds.bounds.width = SpringComponent.WIDTH;
 //		bounds.bounds.height = SpringComponent.HEIGHT;
 
-		position.pos.set(x, y, 2.0f);
+		//position.pos.set(x, y, 2.0f);
 
 		texture.region = Assets.spring;
 
@@ -199,7 +199,7 @@ public class World {
 //		bounds.bounds.width = SquirrelComponent.WIDTH;
 //		bounds.bounds.height = SquirrelComponent.HEIGHT;
 
-		position.pos.set(x, y, 2.0f);
+		//position.pos.set(x, y, 2.0f);
 
 //		state.set(SquirrelComponent.STATE_NORMAL);
 
@@ -229,7 +229,7 @@ public class World {
 //		bounds.bounds.width = CoinComponent.WIDTH;
 //		bounds.bounds.height = CoinComponent.HEIGHT;
 
-		position.pos.set(x, y, 3.0f);
+		//position.pos.set(x, y, 3.0f);
 
 //		state.set(CoinComponent.STATE_NORMAL);
 
@@ -254,7 +254,7 @@ public class World {
 //		bounds.bounds.width = CastleComponent.WIDTH;
 //		bounds.bounds.height = CastleComponent.HEIGHT;
 
-		position.pos.set(x, y, 2.0f);
+		//position.pos.set(x, y, 2.0f);
 
 		texture.region = Assets.castle;
 
