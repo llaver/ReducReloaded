@@ -67,7 +67,7 @@ public class Pathing {
 		firstRun = false;
 	}
 	
-	public Vector2[] generatePath() {
+	public ArrayList<Vector2> generatePath() {
 		//Generate Noise for "random" pathing generation
 		noise = new OpenSimplexNoise(r.nextLong());
 		if(firstRun) {
@@ -92,43 +92,36 @@ public class Pathing {
 			dataSet[i] = new Vector2(path.get(i).getxPosition(), path.get(i).getyPosition());
 		}
 		
-		Vector2[] points = new Vector2[dataSet.length];
+		ArrayList<Vector2> points = new ArrayList<>();
 		CatmullRomSpline<Vector2> spline = new CatmullRomSpline<>(dataSet, false);
-		for(int i = 0; i < points.length; i++) {
-			points[i] = new Vector2();
-			spline.valueAt(points[i], ((float) i) / ((float) points.length - 1));
+		for(int i = 0; i < path.size(); i++) {
+			points.add(spline.valueAt(new Vector2(), ((float) i) / ((float) path.size() - 1)));
 		}
 		return points;
 	}
 	
-	public Vector2[] convertPath(Vector2[] path) {
+	public ArrayList<Vector2> convertPath(ArrayList<Vector2> path) {
 		Vector2 current = null;
 		Vector2 previous = null;
-		Vector2[] updatedPath = new Vector2[path.length];
-		for(int i = 0; i < path.length; i++) {
+		ArrayList<Vector2> updatedPath = new ArrayList<Vector2>();
+		for(int i = 0; i < path.size(); i++) {
 			previous = current;
-			current = path[i];
+			current = path.get(i);
 			if(previous != null) {
-				updatedPath[i] = new Vector2(current.x - previous.x, current.y - previous.y);
+				updatedPath.add(new Vector2(current.x - previous.x, current.y - previous.y));
 			}
 		}
 		return updatedPath;
 	}
 	
-	public Vector2[] extendPath(Vector2[] path) {
+	public ArrayList<Vector2> extendPath(List<Vector2> path) {
 		firstRun = false;
-		endOfPath = new Vector2(path[path.length - 1].x, path[path.length - 1].y);
-		Vector2[] generatedPath = convertPath(generatePath());
-		Vector2[] newPath = new Vector2[path.length + generatedPath.length];
+		endOfPath = new Vector2(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
+		ArrayList<Vector2> generatedPath = convertPath(generatePath());
+		ArrayList<Vector2> newPath = new ArrayList<Vector2>();
 		int counter = 0;
-		for(Vector2 v2 : path) {
-			newPath[counter] = v2;
-			counter++;
-		}
-		for(Vector2 v2 : generatedPath) {
-			newPath[counter] = v2;
-			counter++;
-		}
+		newPath.addAll(path);
+		newPath.addAll(generatedPath);
 		return newPath;
 	}
 	
@@ -147,16 +140,18 @@ public class Pathing {
 		return gridPath;
 	}
 	
-	public Vector2[][] calculateBounds(Vector2[] path) {
+	public ArrayList<Vector2>[] calculateBounds(List<Vector2> path) {
 		
 		Vector2 current = new Vector2(Gdx.graphics.getWidth() / 2.0f, 20);
 		Vector2 previous = new Vector2(Gdx.graphics.getWidth() / 2.0f, 20);
 		
-		Vector2[][] results = new Vector2[2][path.length - 1];
+		ArrayList<Vector2>[] results = new ArrayList[2];
+		results[0] = new ArrayList<>();
+		results[1] = new ArrayList<>();
 		
-		for(int i = 0; i < path.length - 1; i++) {
+		for(int i = 0; i < path.size() - 1; i++) {
 		
-			if(path[i] != null) {
+			if(path.get(i) != null) {
 				//Set needed vars
 				float x1 = current.x;
 				float y1 = current.y;
@@ -177,14 +172,41 @@ public class Pathing {
 				float x4 = x1 - D * dy;
 				float y4 = y1 + D * dx;
 				
-				results[0][i] = new Vector2(x3, y3);
-				results[1][i] = new Vector2(x4, y4);
+				results[0].add(new Vector2(x3, y3));
+				results[1].add(new Vector2(x4, y4));
 			} else {
-				results[0][i] = new Vector2();
-				results[1][i] = new Vector2();
+				results[0].add(new Vector2());
+				results[1].add(new Vector2());
 			}
 		}
 		return results;
+	}
+	
+	public List<Vector2> translate(List<Vector2> points, int x, int y) {
+		Vector2 current;
+		for(int i = 0; i < points.size(); i++) {
+			current = points.get(i);
+			current.set(current.x + x, current.y + y);
+			points.set(i, current);
+		}
+		return points;
+	}
+	
+	public List<Vector2> rotate(List<Vector2> points, int startingPos) {
+		if(startingPos > points.size()) {
+			return points;
+		}
+		Vector2 origin = points.get(startingPos);
+		Vector2 toCalc = points.get(startingPos + 1);
+		Vector2 third = new Vector2(origin.x, origin.y + (toCalc.y - origin.y));
+		
+		
+		return null;
+	}
+	
+	public double getAngle(Vector2 point1, Vector2 point2) {
+	
+		return 0;
 	}
 
 //	void update() {

@@ -1,30 +1,34 @@
 package com.reduc.alpha.entities;
 
-
 import com.badlogic.gdx.math.Vector2;
 import com.reduc.alpha.util.Position;
 import com.reduc.alpha.util.RenderPriority;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by rbell on 7/26/2017.
  */
 public class Road {
 	
-	public Vector2[] path;
-	private Vector2[] leftCurb;
-	private Vector2[] rightCurb;
-	private Vector2[][] road = new Vector2[3][];
+	public ArrayList<Vector2> path;
+	private ArrayList<Vector2> leftCurb;
+	private ArrayList<Vector2> rightCurb;
+	private ArrayList<Vector2>[] road = new ArrayList[3];
+	
 	
 	//TODO decide whether or not to keep rotation here. Probably would be better to use TransformComponent.
 	public float rotation = 0.0f;
 	
 	public Road() {
-		path = new Vector2[0];
-		leftCurb = new Vector2[0];
-		rightCurb = new Vector2[0];
+		path = new ArrayList<Vector2>();
+		leftCurb = new ArrayList<Vector2>();
+		rightCurb = new ArrayList<Vector2>();
 	}
 	
-	public Road(Vector2[] path, Vector2[] leftCurb, Vector2[] rightCurb) {
+	public Road(ArrayList<Vector2> path, ArrayList<Vector2> leftCurb, ArrayList<Vector2> rightCurb) {
 		this.path = path;
 		this.leftCurb = leftCurb;
 		this.rightCurb = rightCurb;
@@ -39,14 +43,14 @@ public class Road {
 	 * @return A double array of Vector2 objects
 	 * Example: .get()[0][10] = center of road, 10 points in.
 	 */
-	public Vector2[][] getAll() {
+	public ArrayList<Vector2>[] getAll() {
 		road[0] = path;
 		road[1] = leftCurb;
 		road[2] = rightCurb;
 		return road;
 	}
 	
-	public void setAll(Vector2[] path, Vector2[] leftCurb, Vector2[] rightCurb) {
+	public void setAll(ArrayList<Vector2> path, ArrayList<Vector2> leftCurb, ArrayList<Vector2> rightCurb) {
 		this.path = path;
 		this.leftCurb = leftCurb;
 		this.rightCurb = rightCurb;
@@ -54,7 +58,7 @@ public class Road {
 	
 	public int getSize() {
 		if(road[0] != null) {
-			return road[0].length;
+			return road[0].size();
 		} else {
 			return 0;
 		}

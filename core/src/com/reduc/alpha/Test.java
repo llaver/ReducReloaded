@@ -28,7 +28,7 @@ public class Test {
 		for(int l = 0; l < 5; l++) {
 			List<Vector2> road = new ArrayList<>();
 			if(l == 0) {
-				path = pathing.generatePath();
+				//path = pathing.generatePath();
 			}
 //			else {
 //				int x = (int) path[path.size() - 1].getX();

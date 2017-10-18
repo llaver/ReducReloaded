@@ -8,6 +8,10 @@ import com.reduc.alpha.screens.GameScreen;
 import com.reduc.alpha.screens.MainMenuScreen;
 import com.reduc.alpha.util.Pathing;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class CalculationsThread extends Thread {
 	
 	private MainMenuScreen m_screen;
@@ -20,50 +24,48 @@ public class CalculationsThread extends Thread {
 	
 	Pathing pathing = new Pathing();
 	
-	Vector2[] path = null;
-	Vector2[] roadPath = null;
+	public ArrayList<Vector2> path = new ArrayList<>();
+	public List<Vector2> roadPath = Collections.synchronizedList(path);
 	
 	Road road;
 	
 	public CalculationsThread(MainMenuScreen screen) { //pass the game screen to it.
 		m_screen = screen;
-		setName("GameLogic");
+		setName("Calculations");
 	}
 	
 	@Override
 	public void run() {
 		m_runing = true;
 		logger.info("Started Calculations Thread");
-		while (m_runing) {
+		while(m_runing) {
 			m_timeBegin = TimeUtils.millis();
 			// act of the camera
-			synchronized(m_screen.road) { //stage with figures
-				//Get the Road instance
-				road = m_screen.road;
-				// now figures
-				if(road.getSize() <= 1) {
-					//Generate road
-					path = pathing.generatePath();
-					roadPath = pathing.extendPath(pathing.extendPath(pathing.convertPath(path)));
-					
-					Vector2[][] bounds = pathing.calculateBounds(roadPath);
-					road.setAll(path, bounds[0], bounds[1]);
-					
-				} else if (road.getSize() < 2000 && road.getSize() > 1) {
-					//Extend road
-					roadPath = pathing.extendPath(road.path);
-					
-					Vector2[][] bounds = pathing.calculateBounds(roadPath);
-					road.setAll(path, bounds[0], bounds[1]);
-				}
+			//Get the Road instance
+			road = m_screen.road;
+			// now figures
+			if(roadPath.size() <= 1) {
+				//Generate road
+				path = pathing.generatePath();
+				roadPath = pathing.extendPath(pathing.extendPath(pathing.convertPath(path)));
+				
+				//ArrayList<Vector2>[] bounds = pathing.calculateBounds(roadPath);
+				//road.setAll(path, bounds[0], bounds[1]);
+				
+			} else if(roadPath.size() < 2000 && roadPath.size() > 1) {
+				//Extend road
+				roadPath = pathing.extendPath(roadPath);
+				
+				//ArrayList<Vector2>[] bounds = pathing.calculateBounds(roadPath);
+				//road.setAll(path, bounds[0], bounds[1]);
 			}
+			
 			m_timeDiff = TimeUtils.millis() - m_timeBegin;
 			m_sleepTime = (long) (1f / CalculationsThread.FRAMERATE * 1000f - m_timeDiff);
-			if (m_sleepTime > 0) {
+			if(m_sleepTime > 0) {
 				try {
 					Thread.sleep(m_sleepTime);
-				}
-				catch (InterruptedException e) {
+				} catch(InterruptedException e) {
 					logger.error("Couldn't sleep " + e.getStackTrace());
 				}
 			} else {
@@ -78,12 +80,11 @@ public class CalculationsThread extends Thread {
 	public void stopThread() {
 		m_runing = false;
 		boolean retry = true;
-		while (retry) {
+		while(retry) {
 			try {
 				this.join();
 				retry = false;
-			}
-			catch (Exception e) {
+			} catch(Exception e) {
 				logger.error(e.getMessage());
 			}
 		}

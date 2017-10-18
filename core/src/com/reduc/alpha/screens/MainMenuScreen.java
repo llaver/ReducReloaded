@@ -16,6 +16,9 @@ import com.reduc.alpha.entities.Road;
 import com.reduc.alpha.util.Pathing;
 import com.reduc.alpha.util.threads.CalculationsThread;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by rbell on 7/28/2017.
  */
@@ -164,23 +167,23 @@ public class MainMenuScreen extends ScreenAdapter {
 //			}
 //		}
 		
-		Vector2[][] roadPath = road.getAll();
-		Vector2[] center = roadPath[0];
-		Vector2[] leftCurb = roadPath[1];
-		Vector2[] rightCurb = roadPath[2];
+		//ArrayList<Vector2>[] roadPath = road.getAll();
+		List<Vector2> center = calcThread.roadPath;
+		//ArrayList<Vector2> leftCurb = roadPath[1];
+		//ArrayList<Vector2> rightCurb = roadPath[2];
 		
-		for(int i = 0; i < center.length - 1; i++) {
-			shapeRenderer.setColor(getColor(roadPath.length, i));
+		for(int i = 0; i < center.size() - 1; i++) {
+			shapeRenderer.setColor(getColor(center.size(), i));
 			old = previous;
 			previous = current;
-			if(center[i] != null && center[i + 1] != null) {
-				current = new Vector2((current.x) + center[i].x * 50, (current.y) + center[i].y * 50);
+			if(center.get(i) != null && center.get(i + 1) != null) {
+				current = new Vector2((current.x) + center.get(i).x * 10, (current.y) + center.get(i).y * 10);
 				
 				shapeRenderer.line(previous.x, previous.y, current.x, current.y);
 				shapeRenderer.setColor(1, 1, 0, 1);
 				
-				shapeRenderer.line(leftCurb[i].x, leftCurb[i].y, leftCurb[i + 1].x, leftCurb[i + 1].y);
-				shapeRenderer.line(rightCurb[i].x, rightCurb[i].y, rightCurb[i + 1].x, rightCurb[i + 1].y);
+				//shapeRenderer.line(leftCurb.get(i).x, leftCurb.get(i).y, leftCurb.get(i + 1).x, leftCurb.get(i + 1).y);
+				//shapeRenderer.line(rightCurb.get(i).x, rightCurb.get(i).y, rightCurb.get(i + 1).x, rightCurb.get(i + 1).y);
 				
 			}
 		}
@@ -193,10 +196,13 @@ public class MainMenuScreen extends ScreenAdapter {
 //		}
 		shapeRenderer.end();
 		
-		if(count == 10) {
-			center = cyclePath(center);
-			leftCurb = cyclePath(leftCurb);
-			rightCurb = cyclePath(rightCurb);
+		if(count == 1) {
+			if(calcThread.roadPath.size() > 0) {
+				calcThread.roadPath.remove(0);
+			}
+			//center = cyclePath(center);
+			//leftCurb = cyclePath(leftCurb);
+			//rightCurb = cyclePath(rightCurb);
 			count = 0;
 		}
 		
@@ -209,6 +215,7 @@ public class MainMenuScreen extends ScreenAdapter {
 		//game.batcher.draw(Settings.soundEnabled ? Assets.soundOn : Assets.soundOff, 0, 0, 64, 64);
 		game.batcher.end();
 	}
+	
 	
 	private Vector2[] cyclePath(Vector2[] current) {
 		if(current.length > 0) {
@@ -232,7 +239,6 @@ public class MainMenuScreen extends ScreenAdapter {
 			return current;
 		}
 	}
-	
 	
 	
 	@Override
